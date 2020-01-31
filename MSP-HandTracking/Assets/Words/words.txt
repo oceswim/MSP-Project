@@ -1,2 +1,1 @@
-chat
-chien
+dog;chien;elephant;elephant;owl;hibou;squirrel;ecureuil;duck;canard;bird;oiseau;frog;grenouille;cow;vache;bull;taureau;horse;cheval;beef;abeille;butterfly;papillon;fly;mouche;monkey;singe;gorilla;gorille;lion;lion;fish;poisson;seal;phoque;shark;requin;whale;baleine;dolphin;dauphin;eagle;aigle;parrot;perroquet;snake;serpent;pinguin;pingouin;giraffe;giraffe;donkey;ane;sheep;mouton;bat;chauve-souris;rabbit;lapin;pig;cochon;goat;chevre;fox;renard;wolf;loup;snail;escargot;lizzard;lezard;spider;araignee;moskito;moustique;cricket;criquet;grasshoper;sauterelle;an;fourmi;bear;ours;hen;poule;beige;beige;black;noir;blue;bleu;brown;marron;green;vert;grey;gris;orange;orange;pink;rose;purple;violet;red;rouge;yellow;jaune;white;blanc
