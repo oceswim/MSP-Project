@@ -5,17 +5,11 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using System.Collections;
-/*
-*
-*AIzaSyAbZuzy5_ilRsP6xNHIyP4sBH7ixLBqsOw --> the API key
-*search engine id 003496967335787894975:7yarfcsjner
-*miel
-*
-*/
+
 public class GenerateWord : MonoBehaviour
 {
     //using google API custom search to get images online based on the word
-    private const string URL = "https://www.googleapis.com/customsearch/v1?key=AIzaSyAbZuzy5_ilRsP6xNHIyP4sBH7ixLBqsOw&cx=003496967335787894975:7yarfcsjner&q=";
+    private const string URL = "https://pixabay.com/api/?key=15096738-95fe6f1ad98a8ac365a73331d&q=";
 
     public TMP_Text englishWord, frenchWord, word1, word2, word3;
     private List<string> englishVersion, frenchVersion;
@@ -39,33 +33,46 @@ public class GenerateWord : MonoBehaviour
         }
         else
         {
-            for(int i=0;i<colors.Length;i++)
+            for (int i = 0; i < colors.Length; i++)
             {
                 englishVersion.Add(colors[i].name);
-               switch(colors[i].name)
+                Debug.Log(englishVersion[i]);
+                switch (englishVersion[i])
                 {
-                    
+
                     case "blue":
                         frenchVersion.Add("bleu");
+                        Debug.Log(frenchVersion[i]);
                         break;
                     case "green":
-                        frenchVersion.Add("green");
+                        frenchVersion.Add("vert");
+                        Debug.Log(frenchVersion[i]);
+                        break;
+                    case "orange":
+                        frenchVersion.Add("orange");
+                        Debug.Log(frenchVersion[i]);
                         break;
                     case "purple":
                         frenchVersion.Add("violet");
+                        Debug.Log(frenchVersion[i]);
                         break;
                     case "red":
                         frenchVersion.Add("rouge");
+                        Debug.Log(frenchVersion[i]);
                         break;
                     case "white":
                         frenchVersion.Add("blanc");
+                        Debug.Log(frenchVersion[i]);
                         break;
                     case "yellow":
                         frenchVersion.Add("jaune");
+                        Debug.Log(frenchVersion[i]);
                         break;
-                  
+                 
                 }
+               // Debug.Log(englishVersion[i] + " " + frenchVersion[i]);
             }
+            UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
         }
 
     }
@@ -73,7 +80,7 @@ public class GenerateWord : MonoBehaviour
     {
         StreamReader reader = new StreamReader(path);
         string fileContent = reader.ReadToEnd();
-        //Debug.Log(fileContent);
+        
         reader.Close();
         string[] temp = fileContent.Split(';');
         for (int i = 0; i < temp.Length; i++)
@@ -90,10 +97,11 @@ public class GenerateWord : MonoBehaviour
         Debug.Log("done");
 
     }
+   
     private void FetchContent(int theIndex)
     {
 
-        string theURL = URL + frenchVersion[theIndex] + "&image_type=photo";
+        string theURL = URL + frenchVersion[theIndex] + "&image_type=vectors";
 
         StartCoroutine(GetRequest(theURL, theIndex));
     }

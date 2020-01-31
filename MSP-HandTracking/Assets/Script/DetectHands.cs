@@ -17,7 +17,7 @@ public class DetectHands : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.transform.name+ " collision");
+        //Debug.Log(collision.transform.name+ " collision");
     }
     private void OnTriggerEnter(Collider other)
     {
