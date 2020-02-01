@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
        }
         else
         {
+            PlayerPrefs.SetInt("Level", 3);
             Debug.Log("Player level"+ PlayerPrefs.GetInt("Level"));
         }
     }

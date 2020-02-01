@@ -14,10 +14,15 @@ public class GenerateWord : MonoBehaviour
     public TMP_Text englishWord, frenchWord, word1, word2, word3;
     private List<string> englishVersion, frenchVersion;
     public Material frameTexture;//applied based on the current word
-    public Texture[] colors;//will be fetched online
-    private string path = "Assets/Words/words.txt";
+    public Texture[] colors;
+    private string pathTown = "Assets/Ressources/Words/inTown.txt";
+    private string pathAnimals = "Assets/Ressources/Words/animals.txt";
     private string imgURL;
     private int currentIndex;
+    public AudioSource[] theColorsVoiceF, theColorsVoiceE;
+    public AudioSource[] theAnimalsVoiceF, theAnimalsVoiceE;
+    public AudioSource[] theInTownVoiceF, theInTownVoiceE;
+    public AudioSource[] teacher;
     void Start()
     {
         currentIndex = 0;
@@ -28,7 +33,18 @@ public class GenerateWord : MonoBehaviour
         //based on level then fetch colors/ object / places
         if (PlayerPrefs.GetInt("Level") > 1)
         {
-            FillWordArray();
+            switch(PlayerPrefs.GetInt("Level"))
+            {
+                case 2:
+                    Debug.Log("animals");
+                    FillWordArray(pathAnimals) ;
+                    break;
+                case 3:
+                    Debug.Log("IN TTOWN");
+                    FillWordArray(pathTown);
+                    break;
+            }
+           
             FetchContent(currentIndex);//will fetch the needed words and textures if level not one.
         }
         else
@@ -70,13 +86,13 @@ public class GenerateWord : MonoBehaviour
                         break;
                  
                 }
-               // Debug.Log(englishVersion[i] + " " + frenchVersion[i]);
+               
             }
             UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
         }
 
     }
-    private void FillWordArray()//specify which words to fetch from list
+    private void FillWordArray(string path)//specify which words to fetch from list
     {
         StreamReader reader = new StreamReader(path);
         string fileContent = reader.ReadToEnd();
@@ -87,11 +103,12 @@ public class GenerateWord : MonoBehaviour
         {
             if (i % 2 == 0)
             {
-                englishVersion.Add(temp[i]);
+                frenchVersion.Add(temp[i]);
             }
             else
             {
-                frenchVersion.Add(temp[i]);
+                englishVersion.Add(temp[i]);
+               
             }
         }
         Debug.Log("done");
@@ -154,7 +171,48 @@ public class GenerateWord : MonoBehaviour
         frameTexture.mainTexture = theTexture;
         frenchWord.text = french;
         englishWord.text = english;
+        PlayerPrefs.SetString("theWord", french);
 
+        
+
+
+    }
+    public void SpeakTeacher()
+    {
+        StartCoroutine(TeacherSpeaks());
+    }
+    private IEnumerator TeacherSpeaks()
+    { 
+        switch (PlayerPrefs.GetInt("Level"))
+        {
+            case 1:
+                teacher[0].Play();
+                yield return new WaitForSeconds(.7f);
+                theColorsVoiceE[currentIndex].Play();
+                yield return new WaitForSeconds(1f);
+                teacher[1].Play();
+                yield return new WaitForSeconds(1);
+                theColorsVoiceF[currentIndex].Play();
+                break;
+            case 2:
+                teacher[0].Play();
+                yield return new WaitForSeconds(.7f);
+                theAnimalsVoiceE[currentIndex].Play();
+                yield return new WaitForSeconds(1f);
+                teacher[1].Play();
+                yield return new WaitForSeconds(1);
+                theAnimalsVoiceF[currentIndex].Play();
+                break;
+            case 3:
+                teacher[0].Play();
+                yield return new WaitForSeconds(.7f);
+                theInTownVoiceE[currentIndex].Play();
+                yield return new WaitForSeconds(1f);
+                teacher[1].Play();
+                yield return new WaitForSeconds(1);
+                theInTownVoiceF[currentIndex].Play();
+                break;
+        }
     }
     public void GenerateRandomWords()//to be called when pressing practice
     {
@@ -200,7 +258,7 @@ public class GenerateWord : MonoBehaviour
         {
             currentIndex++;
         }
-        if (PlayerPrefs.GetInt("Level") > 1)
+        if (PlayerPrefs.GetInt("Level") > 1)//if not colors level
         {
             FetchContent(currentIndex);
         }
@@ -221,7 +279,7 @@ public class GenerateWord : MonoBehaviour
         {
             currentIndex--;
         }
-        if (PlayerPrefs.GetInt("Level") > 1)
+        if (PlayerPrefs.GetInt("Level") > 1)//if not colors level
         {
             FetchContent(currentIndex);
         }

@@ -1,0 +1,1 @@
+aéroport;airport;banque;bank;autobus;bus;bicyclette;bicycle;voiture;car;café;coffee-place;marché;market;musée;museum;pharmacie;pharmacy;avion;plane;police;police;restaurant;restaurant;école;school;magasin;shop;trottoir;sidewalk;station;station;train;train

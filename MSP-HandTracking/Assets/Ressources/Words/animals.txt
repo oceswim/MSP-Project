@@ -1,0 +1,1 @@
+fourmi;ant;chauve-souris;bat;ours;bear;abeille;bee;oiseau;bird;chameau;camel;chat;cat;chien;dog;poisson;fish;grenouille;frog;chevre;goat;cheval;horse;cochon;pig;lapin;rabbit;araignée;spider;tortue;turtle;loup;wolf;

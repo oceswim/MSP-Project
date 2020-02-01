@@ -1,15 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Teleport : MonoBehaviour
 {
     public GameObject LEAPobject;
     public GameObject theCamera;
+    public AudioSource welcomeTeacher,selectWordTeacher;
+    public Button StartButton;
     // Start is called before the first frame update
     void Start()
     {
-        
+     
     }
 
     // Update is called once per frame
@@ -23,7 +26,7 @@ public class Teleport : MonoBehaviour
         float xRot =0;
         float yRot = 90f;
         float zRot = 0;
-        StartCoroutine(TeleportProcess(classPosition,xRot,yRot,zRot));
+        StartCoroutine(TeleportProcess(classPosition,xRot,yRot,zRot,1));
     }
     public void TeleportPractice()
     {
@@ -31,15 +34,29 @@ public class Teleport : MonoBehaviour
         float xRot = 20.2f;
         float yRot = 182.4f;
         float zRot = .9f;
-        StartCoroutine(TeleportProcess(deskPosition, xRot, yRot, zRot));
+        StartCoroutine(TeleportProcess(deskPosition, xRot, yRot, zRot,2));
     }
-    private IEnumerator TeleportProcess(Vector3 newPosition, float rotX, float rotY,float rotZ)
+    private IEnumerator TeleportProcess(Vector3 newPosition, float rotX, float rotY, float rotZ, int index)
     {
         yield return new WaitForSeconds(.5f);
         LEAPobject.transform.position = newPosition;
         LEAPobject.transform.rotation = Quaternion.identity;
-        LEAPobject.transform.Rotate(rotX,rotY ,rotZ);
+        LEAPobject.transform.Rotate(rotX, rotY, rotZ);
         yield return new WaitForSeconds(.5f);
+        switch (index)
+        {
+            case 1:
+                welcomeTeacher.Play();
+                yield return new WaitForSeconds(1f);
+                StartButton.interactable = true;
+                break;
+            case 2:
+                selectWordTeacher.Play();
+                break;
+        
+        }
+   
+
        
     }
 }
