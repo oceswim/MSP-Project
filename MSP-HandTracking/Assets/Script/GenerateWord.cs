@@ -25,6 +25,7 @@ public class GenerateWord : MonoBehaviour
     public AudioSource[] teacher;
     void Start()
     {
+ 
         currentIndex = 0;
         englishVersion = new List<string>();
         frenchVersion = new List<string>();
@@ -55,39 +56,42 @@ public class GenerateWord : MonoBehaviour
                 Debug.Log(englishVersion[i]);
                 switch (englishVersion[i])
                 {
-
+                    case "black":
+                        frenchVersion.Add("black");
+                        break;
                     case "blue":
                         frenchVersion.Add("bleu");
-                        Debug.Log(frenchVersion[i]);
+                        
                         break;
                     case "green":
                         frenchVersion.Add("vert");
-                        Debug.Log(frenchVersion[i]);
+                        
                         break;
                     case "orange":
                         frenchVersion.Add("orange");
-                        Debug.Log(frenchVersion[i]);
+                        
                         break;
                     case "purple":
                         frenchVersion.Add("violet");
-                        Debug.Log(frenchVersion[i]);
+                       
                         break;
                     case "red":
                         frenchVersion.Add("rouge");
-                        Debug.Log(frenchVersion[i]);
+                        
                         break;
                     case "white":
                         frenchVersion.Add("blanc");
-                        Debug.Log(frenchVersion[i]);
+                       
                         break;
                     case "yellow":
                         frenchVersion.Add("jaune");
-                        Debug.Log(frenchVersion[i]);
                         break;
+                    
                  
                 }
                
             }
+            DetectWord.sizeLevel1 = frenchVersion.Count;
             UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
         }
 
@@ -111,7 +115,14 @@ public class GenerateWord : MonoBehaviour
                
             }
         }
-        Debug.Log("done");
+        if(PlayerPrefs.GetInt("Level")==2)
+        {
+            DetectWord.sizeLevel2 = frenchVersion.Count;
+        }
+        else if(PlayerPrefs.GetInt("Level")==3)
+        {
+            DetectWord.sizeLevel3 = frenchVersion.Count;
+        }
 
     }
    
@@ -250,7 +261,7 @@ public class GenerateWord : MonoBehaviour
     }
     public void NextImage()
     {
-        if (currentIndex == (frenchVersion.Count - 1))
+        if (currentIndex == (DetectWord.maxIndex - 1))
         {
             currentIndex = 0;
         }
@@ -273,7 +284,7 @@ public class GenerateWord : MonoBehaviour
     {
         if (currentIndex == 0)
         {
-            currentIndex = (frenchVersion.Count - 1);
+            currentIndex = (DetectWord.maxIndex - 1);
         }
         else
         {
