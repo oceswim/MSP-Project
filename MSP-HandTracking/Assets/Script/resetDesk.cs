@@ -8,9 +8,8 @@ public class resetDesk : MonoBehaviour
     private Quaternion initialRotXW1;
     private Quaternion initialRotXW2;
     private Quaternion initialRotXW3;
-   
-
     public GameObject word1, word2, word3;
+    public static bool wordSelectReset;
 
     void Start()
     {
@@ -28,6 +27,14 @@ public class resetDesk : MonoBehaviour
         initialPosW3 = word3.transform.position;
     }
 
+    private void Update()
+    {
+        if(wordSelectReset)
+        {
+            wordSelectReset = false;
+            ResetPositionAndRotation();
+        }
+    }
     public void ResetPositionAndRotation()
     {
         word1.transform.position = initialPosW1;

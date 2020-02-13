@@ -20,13 +20,13 @@ public class Teleport : MonoBehaviour
     {
         
     }
-    public void TeleportClass()
+    public void TeleportClass(int index)
     {
         Vector3 classPosition = new Vector3(-2.5f, 5.8f, -8.6f);
         float xRot =0;
         float yRot = 90f;
         float zRot = 0;
-        StartCoroutine(TeleportProcess(classPosition,xRot,yRot,zRot,1));
+        StartCoroutine(TeleportProcess(classPosition,xRot,yRot,zRot,index));
     }
     public void TeleportPractice()
     {
@@ -45,12 +45,13 @@ public class Teleport : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         switch (index)
         {
-            case 1:
+          
+            case 1://from hallway to class
                 welcomeTeacher.Play();
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(3f);
                 StartButton.interactable = true;
                 break;
-            case 2:
+            case 2://from class to practice desk
                 selectWordTeacher.Play();
                 break;
         
