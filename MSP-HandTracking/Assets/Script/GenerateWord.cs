@@ -10,26 +10,27 @@ public class GenerateWord : MonoBehaviour
 {
     //using google API custom search to get images online based on the word
     private const string URL = "https://pixabay.com/api/?key=15096738-95fe6f1ad98a8ac365a73331d&q=";
-
+    public GameObject loadingCanvas;
     public TMP_Text frenchWord, word1, word2, word3;
-    public TMP_Text[] englishWord;
+    public TMP_Text[] englishWord, wordCount,wordTotal;
     private List<string> englishVersion, frenchVersion;
     public Material frameTexture;//applied based on the current word
     public Texture[] colors;
     private string pathTown = "Assets/Ressources/Words/inTown.txt";
     private string pathAnimals = "Assets/Ressources/Words/animals.txt";
     private string imgURL;
-    private int currentIndex, practiceIndex,speakIndex;
+    private int currentIndex, practiceIndex, speakIndex, testedSize;
     public AudioSource[] theColorsVoiceF, theColorsVoiceE;
     public AudioSource[] theAnimalsVoiceF, theAnimalsVoiceE;
     public AudioSource[] theInTownVoiceF, theInTownVoiceE;
     public AudioSource[] teacher;
-    public static bool nextWord,speak;
-    public Button next, previous, practice, listen;
+    public AudioSource[] newCategories;
+    public static bool nextWord,speak,newCategory;
+    public Button next, previous, practice, listen,pauseButton;
     private bool isSpeaking,allButtonsActive;
-    void Start()
+    void OnEnable()
     {
-        practiceIndex = speakIndex = 0;
+        practiceIndex = speakIndex =testedSize= 0;
         currentIndex = 0;
         englishVersion = new List<string>();
         frenchVersion = new List<string>();
@@ -58,7 +59,7 @@ public class GenerateWord : MonoBehaviour
             for (int i = 0; i < colors.Length; i++)
             {
                 englishVersion.Add(colors[i].name);
-                Debug.Log(englishVersion[i]);
+                //Debug.Log(englishVersion[i]);
                 switch (englishVersion[i])
                 {
                     case "black":
@@ -99,7 +100,8 @@ public class GenerateWord : MonoBehaviour
             DetectWord.sizeLevel1 = frenchVersion.Count;
             UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
         }
-
+        ResetWordCounterDisplay();
+        
     }
     private void Update()
     {
@@ -107,7 +109,9 @@ public class GenerateWord : MonoBehaviour
         {
             nextWord = false;
             NextWordPractice();
+
             resetDesk.wordSelectReset = true;
+            DetectWord.activateMyTrigger = true;
         }
         if(speak)
         {
@@ -115,8 +119,9 @@ public class GenerateWord : MonoBehaviour
             SpeakTeacher();
         }
         if(isSpeaking && speakIndex ==0)
-        {
+        { 
             speakIndex = 1;
+            pauseButton.interactable = false;
             next.interactable =false ;
             if (allButtonsActive)
             {
@@ -128,6 +133,7 @@ public class GenerateWord : MonoBehaviour
         else if(!isSpeaking && speakIndex==1)
         {
             speakIndex = 0;
+            pauseButton.interactable = true;
             next.interactable = true;
             if (allButtonsActive)
             {
@@ -136,6 +142,7 @@ public class GenerateWord : MonoBehaviour
             }
             listen.interactable = true;
         }
+     
     }
     private void FillWordArray(string path)//specify which words to fetch from list
     {
@@ -170,37 +177,51 @@ public class GenerateWord : MonoBehaviour
     private void FetchContent(int theIndex)
     {
 
-        string theURL = URL + frenchVersion[theIndex] + "&image_type=vectors";
-
-        StartCoroutine(GetRequest(theURL, theIndex));
+       StartCoroutine(TestURL(URL, theIndex));
     }
-    private IEnumerator GetRequest(string uri, int i)
+    private IEnumerator TestURL(string url, int index)
     {
-
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        bool goodToStop = false;
+        string theURL = url + frenchVersion[index] + "&image_type=vectors";
+        while (!goodToStop)
         {
-            // Request and wait for the desired page.
-            yield return webRequest.SendWebRequest();
-            if (webRequest.isNetworkError)
+            using (UnityWebRequest webRequest = UnityWebRequest.Get(theURL))
             {
-
-            }
-            else if (!webRequest.isHttpError)
-            {
-                string[] pageContent = webRequest.downloadHandler.text.Split('"');
-                for (int x = 0; x < pageContent.Length; x++)
+                // Request and wait for the desired page.
+                yield return webRequest.SendWebRequest();
+                if (webRequest.isNetworkError)
                 {
 
-                    if (pageContent[x].Equals("largeImageURL"))
+                }
+                else if (!webRequest.isHttpError)
+                {
+                    string[] pageContent = webRequest.downloadHandler.text.Split('"');
+                    if(pageContent.Length>500)
                     {
-
-                        imgURL = pageContent[x + 2];
-                        Debug.Log(imgURL + " " + frenchVersion[i]);
-                        StartCoroutine(GetTexture(imgURL,i));
-                        break;
+                        goodToStop = true;
+                        GetRequest(pageContent, index);
+                    }
+                    else
+                    {
+                        theURL = url + englishVersion[index] + "&image_type=vectors";
                     }
                 }
+            }
+        }
+        Debug.Log("finished");
 
+    }
+    private void GetRequest(string[] pageContent, int i)
+    {
+        for (int x = 0; x < pageContent.Length; x++)
+        {
+
+            if (pageContent[x].Equals("largeImageURL"))
+            {
+                imgURL = pageContent[x + 2];
+                Debug.Log(imgURL + " " + frenchVersion[i]);
+                StartCoroutine(GetTexture(imgURL, i));
+                break;
             }
         }
     }
@@ -213,13 +234,14 @@ public class GenerateWord : MonoBehaviour
         yield return www.SendWebRequest();
 
         Texture myTexture = DownloadHandlerTexture.GetContent(www);
-       
+        Debug.Log("Changin to :" + theIndex + " img: " + img);
         UpdateDisplay(myTexture, frenchVersion[theIndex], englishVersion[theIndex]);
 
 
     }
     public void StartPractice()
     {
+        ResetWordCounterDisplay();
         currentIndex = practiceIndex= 0;
         StartCoroutine(NextWordProcess(currentIndex));
     }
@@ -238,11 +260,26 @@ public class GenerateWord : MonoBehaviour
     public void SpeakTeacher()//called when pressing next and previous buttons
     {
         isSpeaking = true;
+
         StartCoroutine(TeacherSpeaks());
     }
     private IEnumerator TeacherSpeaks()
     {
-        
+        if(newCategory)
+        {
+            switch (PlayerPrefs.GetInt("Level"))
+            {
+                case 2:
+                    newCategories[0].Play();
+                    yield return new WaitForSeconds(1f); 
+                    break;
+                case 3:
+                    newCategories[1].Play();
+                    yield return new WaitForSeconds(.7f);
+                    break;
+            }
+            newCategory = false;
+        }
         switch (PlayerPrefs.GetInt("Level"))
         {
             case 1:
@@ -309,10 +346,15 @@ public class GenerateWord : MonoBehaviour
                 word3.text = frenchWord.text;
                 break;
         }
+        if(loadingCanvas.activeInHierarchy)
+        {
+            loadingCanvas.SetActive(false);
+        }
     }
     private void NextWordPractice()//we update the current word and display new info on the practice table.
     {
         practiceIndex++;
+        Debug.Log(PlayerPrefs.GetInt("Level")+"practice index:" + practiceIndex);
         StartCoroutine(NextWordProcess(practiceIndex));
         
     }
@@ -321,27 +363,43 @@ public class GenerateWord : MonoBehaviour
         if (PlayerPrefs.GetInt("Level") > 1)
         {
             FetchContent(index);
+            loadingCanvas.SetActive(true);
+            yield return new WaitForSeconds(2);//alows to wait for new word to be set
+            Debug.Log(PlayerPrefs.GetInt("Level") + " generate new words " + index);
+            GenerateRandomWords();
         }
         else
         {
             UpdateDisplay(colors[index], frenchVersion[index], englishVersion[index]);
+            yield return new WaitForSeconds(1);//alows to wait for new word to be set
+            Debug.Log(PlayerPrefs.GetInt("Level") + " generate new words " + index);
+            GenerateRandomWords();
         }
-        yield return new WaitForSeconds(1);//alows to wait for new word to be set
-        GenerateRandomWords();
+        
     }
     public void NextImage()
     {
+        
         if (currentIndex == (DetectWord.maxIndex - 1))
         {
             currentIndex = 0;
-            if(!allButtonsActive)
-            {
-                allButtonsActive = true;
-            }
         }
         else
         {
             currentIndex++;
+            Debug.Log("Current index next img:" + currentIndex);
+            if (currentIndex == (DetectWord.maxIndex - 1))
+            {
+                if (!allButtonsActive)
+                {
+                    allButtonsActive = true;
+                }
+            }
+        }
+        for (int i = 0; i < wordCount.Length; i++)
+        {
+            wordCount[i].text = (currentIndex + 1).ToString();
+            wordTotal[i].text = (DetectWord.maxIndex).ToString();
         }
         if (PlayerPrefs.GetInt("Level") > 1)//if not colors level
         {
@@ -364,6 +422,11 @@ public class GenerateWord : MonoBehaviour
         {
             currentIndex--;
         }
+        for (int i = 0; i < wordCount.Length; i++)
+        {
+            wordCount[i].text = (currentIndex + 1).ToString();
+            wordTotal[i].text = (DetectWord.maxIndex).ToString();
+        }
         if (PlayerPrefs.GetInt("Level") > 1)//if not colors level
         {
             FetchContent(currentIndex);
@@ -380,6 +443,7 @@ public class GenerateWord : MonoBehaviour
         allButtonsActive = false;
         previous.interactable = false;
         practice.interactable = false;
+        ResetWordCounterDisplay();
         switch(PlayerPrefs.GetInt("Level"))
         {
             case 1:
@@ -397,5 +461,14 @@ public class GenerateWord : MonoBehaviour
         }
         
     }
+    private void ResetWordCounterDisplay()
+    {
+        for (int i = 0; i < wordCount.Length; i++)
+        {
+            wordCount[i].text = "1";
+            wordTotal[i].text = (DetectWord.maxIndex).ToString();
+        }
+    }
+
 
 }

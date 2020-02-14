@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Leap.Unity.Interaction;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,16 +11,15 @@ public class resetDesk : MonoBehaviour
     private Quaternion initialRotXW3;
     public GameObject word1, word2, word3;
     public static bool wordSelectReset;
-
+    private InteractionBehaviour word1Interaction, word2Interaction, word3Interaction;
     void Start()
     {
+        word1Interaction = word1.GetComponent<InteractionBehaviour>();
+        word2Interaction = word2.GetComponent<InteractionBehaviour>();
+        word3Interaction = word3.GetComponent<InteractionBehaviour>();
        
         initialRotXW1 = word1.transform.localRotation;
-
-
         initialRotXW2 = word2.transform.localRotation;
-
-
         initialRotXW3 = word3.transform.localRotation;
       
         initialPosW1 = word1.transform.position;
@@ -33,6 +33,7 @@ public class resetDesk : MonoBehaviour
         {
             wordSelectReset = false;
             ResetPositionAndRotation();
+
         }
     }
     public void ResetPositionAndRotation()
@@ -46,8 +47,24 @@ public class resetDesk : MonoBehaviour
         word3.transform.rotation = Quaternion.identity;
 
         word1.transform.localRotation = initialRotXW1;
-       word2.transform.localRotation=initialRotXW2;
-       word3.transform.localRotation=initialRotXW3;
+        word2.transform.localRotation=initialRotXW2;
+        word3.transform.localRotation=initialRotXW3;
+
+        //resetting any interaction behavior turnedoff
+        if(word1Interaction.enabled == false)
+        {
+            word1Interaction.enabled = true;
+        }
+        else if(word2Interaction.enabled == false)
+        {
+            word2Interaction.enabled = true;
+        }
+        else if(word3Interaction.enabled == false)
+        {
+            word3Interaction.enabled = true;
+        }
+
+      
     }
  
     

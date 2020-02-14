@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using System.Collections;
+using Leap.Unity.Interaction;
 
 public class DetectWord : MonoBehaviour
 {
@@ -9,16 +10,21 @@ public class DetectWord : MonoBehaviour
     public GameObject congratsCanvas;
     public static int sizeLevel1, sizeLevel2, sizeLevel3, maxIndex;
     private int completionTracker,counter;
-    public AudioSource rightAnswer, wrongAnswer;
-    public GameObject correctAnswerCanvas, nextWordCanvas;
+    public AudioSource rightAnswer, wrongAnswer,finished;
+    public GameObject nextWordCanvas;
+    public ParticleSystem right, wrong;
     private BoxCollider myTrigger;
     private bool wrongWord;
-    private void Start()
+    public static bool activateMyTrigger;
+    private int try1;
+    private void Awake()
     {
+        try1= 0;
         myTrigger = gameObject.GetComponent<BoxCollider>();
+        Debug.Log("my trigger is enabled" + myTrigger.enabled);
         maxIndex = 2;
         completionTracker= counter = 0;
-        wrongWord = false;
+        wrongWord = activateMyTrigger = false;
     }
     private void Update()
     {
@@ -27,14 +33,34 @@ public class DetectWord : MonoBehaviour
             wrongWord = false;
             resetDesk.wordSelectReset = true;
         }
+    if(activateMyTrigger)
+        {
+            ActivateTrigger();
+            activateMyTrigger = false;
+        }
+
+    }
+    public void ActivateTrigger()
+    {
+        if (myTrigger.enabled == true)
+        {
+            myTrigger.enabled = false;
+        }
+        else
+        {
+            myTrigger.enabled = true;
+        }
+
     }
     private void OnTriggerEnter(Collider other)
     {
         
         if (PlayerPrefs.HasKey("theWord"))
         {
+            other.GetComponent<InteractionBehaviour>().enabled = false;
             if (other.transform.tag.Equals("Word"))
             {
+                
                 myTrigger.enabled = false;
                 toCompare = other.transform.Find("Canvas/theWord").GetComponent<TMP_Text>();
                 Debug.Log(toCompare + " compared to the word : " + PlayerPrefs.GetString("theWord"));
@@ -49,7 +75,8 @@ public class DetectWord : MonoBehaviour
                         Debug.Log("it's hey");
                         rightAnswer.Play();//right answer sound 
                         counter++;
-                        Debug.Log("the counter:" + counter + " counter modulo " + maxIndex + ": " + (counter % maxIndex) + " completion tracker = " + completionTracker);
+                        Debug.Log(try1+": the counter:" + counter + " counter modulo " + maxIndex + ": " + (counter % maxIndex) + " completion tracker = " + completionTracker);
+                        try1++;
                         switch (PlayerPrefs.GetInt("Level"))
                         {
                             case 1:
@@ -67,7 +94,7 @@ public class DetectWord : MonoBehaviour
                         {
                             if (counter != completionTracker && counter > 0)//2 new words guessed
                             {
-                                Debug.Log("the counter:" + counter + " counter modulo "+maxIndex+": " + (counter % maxIndex) + " completion tracker = " + completionTracker);
+                                Debug.Log("in 2new words the counter:" + counter + " counter modulo "+maxIndex+": " + (counter % maxIndex) + " completion tracker = " + completionTracker);
                                 //next 2 words canvas
                                 Debug.Log("2 new words learned but not a level completed");
                                 nextWordCanvas.SetActive(true);
@@ -76,6 +103,9 @@ public class DetectWord : MonoBehaviour
                             }
                             else if (counter == completionTracker)//all words are guessed
                             {
+                                congratsCanvas.SetActive(true);//you completed a category
+                                GameManager.instance.SwitchLevels(); //deactivate generate word 
+                                counter = 0;
                                 maxIndex = 2;
                                 switch (PlayerPrefs.GetInt("Level"))
                                 {
@@ -87,18 +117,20 @@ public class DetectWord : MonoBehaviour
                                         break;
                                     case 3:
                                         //finished learning basics french word what do you want to do
+                                        finished.Play();
                                         break;
                                 }
+                                GameManager.instance.SwitchLevels();// activate generate wword again to display next category
+                                GenerateWord.newCategory = true;
 
-                                //deactivate generate word and activate it again to display next category
 
-                                congratsCanvas.SetActive(true);//you completed a level
                             }
                         }
                         else if (counter > 0 && counter <= completionTracker)//new words guessed out of 2
                         {
                             Debug.Log("Here");
-                            StartCoroutine(ShowThenHideCanvas(correctAnswerCanvas));
+                            right.Play();
+                            //StartCoroutine(ShowThenHideCanvas(correctAnswerCanvas));
                             GenerateWord.nextWord = true;//display next word
                                                          //with static bool and new method in generate a word
                         }
@@ -107,8 +139,10 @@ public class DetectWord : MonoBehaviour
                     else //wrong answer count
                     {
                         Debug.Log("Not hey");
+                        wrong.Play();
                         wrongAnswer.Play();
                         wrongWord = true;
+                        ActivateTrigger();  
 
                     }
 
@@ -121,12 +155,12 @@ public class DetectWord : MonoBehaviour
             Debug.Log("No prefs");
         }
 
-        myTrigger.enabled = true;
+        
     }
-    private IEnumerator ShowThenHideCanvas(GameObject toHide)
+   /* private IEnumerator ShowThenHideCanvas(GameObject toHide)
     {
         toHide.SetActive(true);
         yield return new WaitForSeconds(8);
         toHide.SetActive(false);
-    }
+    }*/
 }
