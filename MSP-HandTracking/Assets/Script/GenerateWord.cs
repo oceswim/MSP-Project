@@ -28,6 +28,7 @@ public class GenerateWord : MonoBehaviour
     public static bool nextWord,speak,newCategory;
     public Button next, previous, practice, listen,pauseButton;
     private bool isSpeaking,allButtonsActive;
+    public GameObject practiceInteractable;
     void OnEnable()
     {
         practiceIndex = speakIndex =testedSize= 0;
@@ -127,6 +128,7 @@ public class GenerateWord : MonoBehaviour
             {
                 previous.interactable = false;
                 practice.interactable = false;
+
             }
             listen.interactable=false;
         }
@@ -139,10 +141,17 @@ public class GenerateWord : MonoBehaviour
             {
                 previous.interactable = true;
                 practice.interactable = true;
+                StartCoroutine(LimitedActivation());
             }
             listen.interactable = true;
         }
      
+    }
+    private IEnumerator LimitedActivation()
+    {
+        practiceInteractable.SetActive(true);
+        yield return new WaitForSeconds(3);
+        practiceInteractable.SetActive(false);
     }
     private void FillWordArray(string path)//specify which words to fetch from list
     {
@@ -260,7 +269,6 @@ public class GenerateWord : MonoBehaviour
     public void SpeakTeacher()//called when pressing next and previous buttons
     {
         isSpeaking = true;
-
         StartCoroutine(TeacherSpeaks());
     }
     private IEnumerator TeacherSpeaks()
@@ -271,11 +279,11 @@ public class GenerateWord : MonoBehaviour
             {
                 case 2:
                     newCategories[0].Play();
-                    yield return new WaitForSeconds(1f); 
+                    yield return new WaitForSeconds(7f); 
                     break;
                 case 3:
                     newCategories[1].Play();
-                    yield return new WaitForSeconds(.7f);
+                    yield return new WaitForSeconds(7f);
                     break;
             }
             newCategory = false;
@@ -354,7 +362,7 @@ public class GenerateWord : MonoBehaviour
     private void NextWordPractice()//we update the current word and display new info on the practice table.
     {
         practiceIndex++;
-        Debug.Log(PlayerPrefs.GetInt("Level")+"practice index:" + practiceIndex);
+        UpdateCounterWords(practiceIndex);
         StartCoroutine(NextWordProcess(practiceIndex));
         
     }
@@ -460,6 +468,11 @@ public class GenerateWord : MonoBehaviour
                 break;
         }
         
+    }
+    private void UpdateCounterWords(int index)
+    {
+        Debug.Log("wordcount = " + index); 
+         wordCount[1].text = (index+1).ToString(); 
     }
     private void ResetWordCounterDisplay()
     {
