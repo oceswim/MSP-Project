@@ -57,7 +57,10 @@ public class DetectWord : MonoBehaviour
         
         if (PlayerPrefs.HasKey("theWord"))
         {
-            other.GetComponent<InteractionBehaviour>().enabled = false;
+            if (other.GetComponent<InteractionBehaviour>() != null)
+            {
+                other.GetComponent<InteractionBehaviour>().enabled = false;
+            }
             if (other.transform.tag.Equals("Word"))
             {
                 
@@ -111,8 +114,10 @@ public class DetectWord : MonoBehaviour
                                 {
                                     case 1:
                                         PlayerPrefs.SetInt("Level", 2);
+                                        PlayerPrefs.SetInt("MaxLevel", 2);
                                         break;
                                     case 2:
+                                        PlayerPrefs.SetInt("MaxLevel", 3);
                                         PlayerPrefs.SetInt("Level", 3);
                                         break;
                                     case 3:

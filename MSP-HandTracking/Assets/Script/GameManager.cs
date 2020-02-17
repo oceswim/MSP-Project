@@ -1,34 +1,36 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using System.Collections;
+using System.IO;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
-    public GameObject wordGenerator;
+    public GameObject wordGenerator, categoryButton, inTownButton;
     // Start is called before the first frame update
     void Awake()
     {
-        PlayerPrefs.DeleteAll();
-        if (!PlayerPrefs.HasKey("Level"))
+        // if no file saved create a brand new game
+        if (!File.Exists(Application.persistentDataPath + "/ThePlayerInfo.gd"))
         {
-            Debug.Log("new game");
-            PlayerPrefs.SetInt("Level", 1);
+            PlayerPrefs.DeleteAll();
+            Game.current = new Game();
+            PlayerPrefs.SetInt("Level", Game.current.thePlayer.currentLevel);
+            PlayerPrefs.SetInt("MaxLevel", Game.current.thePlayer.levelReached);
+            Debug.Log("new game: "+ PlayerPrefs.GetInt("Level")+ "; "+ PlayerPrefs.GetInt("MaxLevel")+"/"+Game.current.thePlayer.levelReached);
         }
+        //if file found, create a new game and load saved information
         else
         {
-            PlayerPrefs.SetInt("Level", 3);
-            Debug.Log("Player level" + PlayerPrefs.GetInt("Level"));
+            SaveSystem.LoadPlayer();
+            Game.current = new Game();
+            Game.current.thePlayer.currentLevel = SaveSystem.currentLevel; 
+            Game.current.thePlayer.levelReached = SaveSystem.reachedLevel;
+            PlayerPrefs.SetInt("Level", Game.current.thePlayer.currentLevel);
+            PlayerPrefs.SetInt("MaxLevel", Game.current.thePlayer.levelReached);
+            Debug.Log("Loaded current level in manager: " + PlayerPrefs.GetInt("Level"));
+            Debug.Log("Loaded max level in manager: " + PlayerPrefs.GetInt("MaxLevel"));
         }
-
-
-        /*   if (Game.current == null)
-           {
-               PlayerPrefs.DeleteAll();
-               Debug.Log("new game");
-               Game.current = new Game();
-               playerHealth = Game.current.thePlayer.health;
-               PlayerPrefs.SetInt("firstLoad", 1);//allows to create a new game only at the very first load
-           }*/
+        
 
         //Check if instance already exists
         if (instance == null)
@@ -43,12 +45,25 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
         //Sets this to not be destroyed when reloading scene
-        //DontDestroyOnLoad(gameObject);
-
+        if(PlayerPrefs.HasKey("MaxLevel"))
+        {
+            if(PlayerPrefs.GetInt("MaxLevel")>1)
+            {
+                categoryButton.SetActive(true);
+            }
+        }
+        
     }
+    
     public void ExitGame()
     {
         Debug.Log("BYE");
+        OnApplicationQuit();
+    }
+    private void OnApplicationQuit()
+    {
+        Debug.Log("BYE");
+        SaveSystem.SavePlayer();
         Application.Quit();
     }
     public void SwitchLevels()
@@ -64,5 +79,39 @@ public class GameManager : MonoBehaviour
             Debug.Log("ON");
             wordGenerator.SetActive(true);
         }
+    }
+    public void CategorySelection()
+    {
+        if(PlayerPrefs.GetInt("MaxLevel")==3)//since category selection available only at level 2, then colors and animal button already active;
+        {
+          
+          inTownButton.SetActive(true);
+  
+        }
+    }
+    public void SwitchCategory(int category)
+    {
+        if (PlayerPrefs.GetInt("Level") != category)//if new category selected different from 
+        {
+            switch (category)
+            {
+                case 1:
+                    PlayerPrefs.SetInt("Level", 1);
+                    break;
+                case 2:
+                    PlayerPrefs.SetInt("Level", 2);
+                    break;
+                case 3:
+                    PlayerPrefs.SetInt("Level", 3);
+                    break;
+            }
+            StartCoroutine(SwitchLevelCoroutine());
+        }
+    }
+    private IEnumerator SwitchLevelCoroutine()
+    {
+        SwitchLevels();
+        yield return new WaitForSeconds(1);
+        SwitchLevels();
     }
 }

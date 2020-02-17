@@ -225,7 +225,7 @@ public class GenerateWord : MonoBehaviour
         for (int x = 0; x < pageContent.Length; x++)
         {
 
-            if (pageContent[x].Equals("largeImageURL"))
+            if (pageContent[x].Equals("webformatURL"))
             {
                 imgURL = pageContent[x + 2];
                 Debug.Log(imgURL + " " + frenchVersion[i]);
