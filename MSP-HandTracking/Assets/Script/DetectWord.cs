@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using TMPro;
-using System.Collections;
 using Leap.Unity.Interaction;
 
 public class DetectWord : MonoBehaviour

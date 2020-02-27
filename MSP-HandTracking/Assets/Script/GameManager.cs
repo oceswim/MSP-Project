@@ -6,12 +6,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
     public GameObject wordGenerator, categoryButton, inTownButton;
+    public GameObject LeapObject;
+    private Vector3 StartPosNew = new Vector3(-3, 6.2f, -28.71f);
+    private Vector3 StartPosOld = new Vector3(-3, 6.2f, -14.5f);
     // Start is called before the first frame update
     void Awake()
     {
         // if no file saved create a brand new game
         if (!File.Exists(Application.persistentDataPath + "/ThePlayerInfo.gd"))
         {
+            LeapObject.transform.position = StartPosNew;
             PlayerPrefs.DeleteAll();
             Game.current = new Game();
             PlayerPrefs.SetInt("Level", Game.current.thePlayer.currentLevel);
@@ -21,6 +25,7 @@ public class GameManager : MonoBehaviour
         //if file found, create a new game and load saved information
         else
         {
+            LeapObject.transform.position = StartPosOld;
             SaveSystem.LoadPlayer();
             Game.current = new Game();
             Game.current.thePlayer.currentLevel = SaveSystem.currentLevel; 

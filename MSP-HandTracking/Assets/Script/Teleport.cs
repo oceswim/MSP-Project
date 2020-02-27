@@ -9,17 +9,7 @@ public class Teleport : MonoBehaviour
     public GameObject theCamera;
     public AudioSource welcomeTeacher,selectWordTeacher;
     public Button StartButton;
-    // Start is called before the first frame update
-    void Start()
-    {
-     
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   
     public void TeleportClass(int index)
     {
         Vector3 classPosition = new Vector3(-2.5f, 5.8f, -8.6f);
@@ -35,6 +25,12 @@ public class Teleport : MonoBehaviour
         float yRot = 182.4f;
         float zRot = .9f;
         StartCoroutine(TeleportProcess(deskPosition, xRot, yRot, zRot,2));
+    }
+    public void TeleportTuto()
+    {
+        
+        Vector3 deskPosition = new Vector3(-3, 6.2f, -25.987f);
+        StartCoroutine(TeleportProcess(deskPosition, 0, 0, 0, 3));
     }
     private IEnumerator TeleportProcess(Vector3 newPosition, float rotX, float rotY, float rotZ, int index)
     {
@@ -54,7 +50,7 @@ public class Teleport : MonoBehaviour
             case 2://from class to practice desk
                 selectWordTeacher.Play();
                 break;
-        
+    
         }
    
 
