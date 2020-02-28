@@ -5,7 +5,7 @@ using Leap.Unity.Interaction;
 public class DetectCube : MonoBehaviour
 {
     private Rigidbody colliderRigidbody;
-    public GameObject NextButton, CongratsText;
+    public GameObject NextButton, CongratsText,resetButton, Text2;
 
     private int completionTracker, counter;
     public AudioSource rightAnswer;
@@ -40,7 +40,12 @@ public class DetectCube : MonoBehaviour
             myTrigger.enabled = false;
             Debug.Log("it's hey");
             rightAnswer.Play();//right answer sound
-            Destroy(other.transform);
+            Destroy(other.transform.gameObject);
+            Text2.SetActive(false);
+            CongratsText.SetActive(true);
+            right.Play();
+            resetButton.SetActive(false);
+            NextButton.SetActive(true);
 
         }
     }
