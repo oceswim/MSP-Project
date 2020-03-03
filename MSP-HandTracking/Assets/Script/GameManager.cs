@@ -69,7 +69,13 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("BYE");
         SaveSystem.SavePlayer();
-        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_WEBPLAYER
+         Application.OpenURL(webplayerQuitURL);
+#else
+         Application.Quit();
+#endif
     }
     public void SwitchLevels()
     {
