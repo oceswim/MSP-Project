@@ -7,8 +7,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null;
     public GameObject wordGenerator, categoryButton, inTownButton;
     public GameObject LeapObject;
-    private Vector3 StartPosNew = new Vector3(-3, 6.2f, -28.71f);
-    private Vector3 StartPosOld = new Vector3(-3, 6.2f, -14.5f);
+    private Vector3 StartPosNew = new Vector3(-3, 5.7f, -28.71f);
+    private Vector3 StartPosOld = new Vector3(-3, 5.7f, -14.5f);
     // Start is called before the first frame update
     void Awake()
     {
@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
             Game.current.thePlayer.currentLevel = SaveSystem.currentLevel; 
             Game.current.thePlayer.levelReached = SaveSystem.reachedLevel;
             PlayerPrefs.SetInt("Level", Game.current.thePlayer.currentLevel);
-
             PlayerPrefs.SetInt("MaxLevel", Game.current.thePlayer.levelReached);
             Debug.Log("Loaded current level in manager: " + PlayerPrefs.GetInt("Level"));
             Debug.Log("Loaded max level in manager: " + PlayerPrefs.GetInt("MaxLevel"));
@@ -119,11 +118,16 @@ public class GameManager : MonoBehaviour
             }
             StartCoroutine(SwitchLevelCoroutine());
         }
+        else
+        {
+            GenerateWord.speak = true;
+        }
     }
     private IEnumerator SwitchLevelCoroutine()
     {
         SwitchLevels();
         yield return new WaitForSeconds(1);
         SwitchLevels();
+        GenerateWord.speak = true;
     }
 }

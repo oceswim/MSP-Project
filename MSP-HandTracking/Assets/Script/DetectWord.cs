@@ -10,7 +10,7 @@ public class DetectWord : MonoBehaviour
     public static int sizeLevel1, sizeLevel2, sizeLevel3, maxIndex;
     private int completionTracker,counter;
     public AudioSource rightAnswer, wrongAnswer,finished;
-    public GameObject nextWordCanvas;
+    public GameObject nextWordCanvas,finishedCanvas;
     public ParticleSystem right, wrong;
     private BoxCollider myTrigger;
     private bool wrongWord;
@@ -114,18 +114,22 @@ public class DetectWord : MonoBehaviour
                                     case 1:
                                         PlayerPrefs.SetInt("Level", 2);
                                         PlayerPrefs.SetInt("MaxLevel", 2);
+                                        GameManager.instance.SwitchLevels();// activate generate wword again to display next category
+                                        GenerateWord.newCategory = true;
                                         break;
                                     case 2:
                                         PlayerPrefs.SetInt("MaxLevel", 3);
                                         PlayerPrefs.SetInt("Level", 3);
+                                        GameManager.instance.SwitchLevels();// activate generate wword again to display next category
+                                        GenerateWord.newCategory = true;
                                         break;
                                     case 3:
                                         //finished learning basics french word what do you want to do
                                         finished.Play();
+
                                         break;
                                 }
-                                GameManager.instance.SwitchLevels();// activate generate wword again to display next category
-                                GenerateWord.newCategory = true;
+                            
 
 
                             }

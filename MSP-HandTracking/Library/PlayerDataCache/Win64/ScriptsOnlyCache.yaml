@@ -38,8 +38,6 @@ ScriptsOnlyBuild:
     - Valve.VR.SteamVR_Settings
     - Valve.VR.SteamVR_Skeleton_Pose
     - Valve.VR.SteamVR_Skeleton_Poser
-    SteamVR_Editor.dll:
-    - Valve.VR.SteamVR_UnitySettingsWindow
     Unity.TextMeshPro.dll:
     - TMPro.TMP_ColorGradient
     - TMPro.TMP_FontAsset
@@ -303,7 +301,7 @@ ScriptsOnlyBuild:
     className: SeeThru
   - hash:
       serializedVersion: 2
-      Hash: a623c1fda27012648309632e802c78f1
+      Hash: 05e51a49204a099a218ec2d549c7d85d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: DetectWord
@@ -2614,4 +2612,4 @@ ScriptsOnlyBuild:
   platform: 19
   scenePathNames:
   - Assets/Scenes/Environment.unity
-  playerPath: /Users/Oceswil83/Desktop/COURSFAC/HandTrackingBuilds/build1138/MSP.exe
+  playerPath: C:/Users/k1844498/Downloads/MSP.exe

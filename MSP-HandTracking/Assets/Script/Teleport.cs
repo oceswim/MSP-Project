@@ -12,7 +12,7 @@ public class Teleport : MonoBehaviour
    
     public void TeleportClass(int index)
     {
-        Vector3 classPosition = new Vector3(-2.5f, 5.8f, -8.6f);
+        Vector3 classPosition = new Vector3(-2.5f, 5.28f, -8.6f);
         float xRot =0;
         float yRot = 90f;
         float zRot = 0;
@@ -20,7 +20,7 @@ public class Teleport : MonoBehaviour
     }
     public void TeleportPractice()
     {
-        Vector3 deskPosition = new Vector3(1.7f, 6f, -10.7f);
+        Vector3 deskPosition = new Vector3(1.7f, 5.28f, -10.7f);
         float xRot = 10f;
         float yRot = 182.4f;
         float zRot = .9f;
@@ -29,7 +29,7 @@ public class Teleport : MonoBehaviour
     public void TeleportTuto()
     {
         
-        Vector3 deskPosition = new Vector3(-3.04f, 6.07f, -25.545f);
+        Vector3 deskPosition = new Vector3(-3.04f, 5.28f, -25.545f);
         StartCoroutine(TeleportProcess(deskPosition, 0, 0, 0, 3));
     }
     private IEnumerator TeleportProcess(Vector3 newPosition, float rotX, float rotY, float rotZ, int index)

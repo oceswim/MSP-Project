@@ -29,19 +29,21 @@ public class GenerateWord : MonoBehaviour
     public Button next, previous, practice, listen,pauseButton;
     private bool isSpeaking,allButtonsActive;
     public GameObject practiceInteractable;
-    void OnEnable()
+    private int firstWake=0;
+    void Start()
     {
-        practiceIndex = speakIndex =testedSize= 0;
+       
+        practiceIndex = speakIndex = testedSize = 0;
         currentIndex = 0;
         englishVersion = new List<string>();
         frenchVersion = new List<string>();
 
-        previous.interactable = practice.interactable = allButtonsActive= false;
+        previous.interactable = practice.interactable = allButtonsActive = false;
 
         //based on level then fetch colors/ object / places
         if (PlayerPrefs.GetInt("Level") > 1)
         {
-            switch(PlayerPrefs.GetInt("Level"))
+            switch (PlayerPrefs.GetInt("Level"))
             {
                 case 2:
                     Debug.Log("animals");
@@ -54,8 +56,8 @@ public class GenerateWord : MonoBehaviour
                     UpdateDisplay(objects[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
                     break;
             }
-           
-           // FetchContent(currentIndex);//will fetch the needed words and textures if level not one.
+            firstWake++;
+            // FetchContent(currentIndex);//will fetch the needed words and textures if level not one.
         }
         else
         {
@@ -70,41 +72,122 @@ public class GenerateWord : MonoBehaviour
                         break;
                     case "blue":
                         frenchVersion.Add("bleu");
-                        
+
                         break;
                     case "green":
                         frenchVersion.Add("vert");
-                        
+
                         break;
                     case "orange":
                         frenchVersion.Add("orange");
-                        
+
                         break;
                     case "purple":
                         frenchVersion.Add("violet");
-                       
+
                         break;
                     case "red":
                         frenchVersion.Add("rouge");
-                        
+
                         break;
                     case "white":
                         frenchVersion.Add("blanc");
-                       
+
                         break;
                     case "yellow":
                         frenchVersion.Add("jaune");
                         break;
-                    
-                 
+
+
                 }
-               
+
             }
             DetectWord.sizeLevel1 = frenchVersion.Count;
             UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
+            firstWake++;
         }
         ResetWordCounterDisplay();
-        
+        Debug.Log("first wake" + firstWake);
+    }
+    void OnEnable()
+    {
+        if (firstWake > 0)
+        {
+            Debug.Log("HHHEEEEEEEEEEEEERE");
+            practiceIndex = speakIndex = testedSize = 0;
+            currentIndex = 0;
+            englishVersion = new List<string>();
+            frenchVersion = new List<string>();
+
+            previous.interactable = practice.interactable = allButtonsActive = false;
+
+            //based on level then fetch colors/ object / places
+            if (PlayerPrefs.GetInt("Level") > 1)
+            {
+                switch (PlayerPrefs.GetInt("Level"))
+                {
+                    case 2:
+                        Debug.Log("animals");
+                        FillWordArray(pathAnimals);
+                        UpdateDisplay(animals[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
+                        break;
+                    case 3:
+                        Debug.Log("IN TTOWN");
+                        FillWordArray(pathTown);
+                        UpdateDisplay(objects[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
+                        break;
+                }
+
+                // FetchContent(currentIndex);//will fetch the needed words and textures if level not one.
+            }
+            else
+            {
+                for (int i = 0; i < colors.Length; i++)
+                {
+                    englishVersion.Add(colors[i].name);
+                    //Debug.Log(englishVersion[i]);
+                    switch (englishVersion[i])
+                    {
+                        case "black":
+                            frenchVersion.Add("noir");
+                            break;
+                        case "blue":
+                            frenchVersion.Add("bleu");
+
+                            break;
+                        case "green":
+                            frenchVersion.Add("vert");
+
+                            break;
+                        case "orange":
+                            frenchVersion.Add("orange");
+
+                            break;
+                        case "purple":
+                            frenchVersion.Add("violet");
+
+                            break;
+                        case "red":
+                            frenchVersion.Add("rouge");
+
+                            break;
+                        case "white":
+                            frenchVersion.Add("blanc");
+
+                            break;
+                        case "yellow":
+                            frenchVersion.Add("jaune");
+                            break;
+
+
+                    }
+
+                }
+                DetectWord.sizeLevel1 = frenchVersion.Count;
+                UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
+            }
+            ResetWordCounterDisplay();
+        }
     }
     private void Update()
     {
@@ -167,6 +250,7 @@ public class GenerateWord : MonoBehaviour
             if (i % 2 == 0)
             {
                 frenchVersion.Add(temp[i]);
+                
             }
             else
             {
@@ -174,8 +258,10 @@ public class GenerateWord : MonoBehaviour
                
             }
         }
-        if(PlayerPrefs.GetInt("Level")==2)
+        Debug.Log(frenchVersion.Count + " FRENCH");
+        if (PlayerPrefs.GetInt("Level")==2)
         {
+
             DetectWord.sizeLevel2 = frenchVersion.Count;
         }
         else if(PlayerPrefs.GetInt("Level")==3)
