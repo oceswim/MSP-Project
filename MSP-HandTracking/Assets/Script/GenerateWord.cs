@@ -15,7 +15,7 @@ public class GenerateWord : MonoBehaviour
     public TMP_Text[] englishWord, wordCount,wordTotal;
     private List<string> englishVersion, frenchVersion;
     public Material frameTexture;//applied based on the current word
-    public Texture[] colors;
+    public Texture[] colors,animals,objects;
     private string pathTown = "Assets/Ressources/Words/inTown.txt";
     private string pathAnimals = "Assets/Ressources/Words/animals.txt";
     private string imgURL;
@@ -45,15 +45,17 @@ public class GenerateWord : MonoBehaviour
             {
                 case 2:
                     Debug.Log("animals");
-                    FillWordArray(pathAnimals) ;
+                    FillWordArray(pathAnimals);
+                    UpdateDisplay(animals[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
                     break;
                 case 3:
                     Debug.Log("IN TTOWN");
                     FillWordArray(pathTown);
+                    UpdateDisplay(objects[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
                     break;
             }
            
-            FetchContent(currentIndex);//will fetch the needed words and textures if level not one.
+           // FetchContent(currentIndex);//will fetch the needed words and textures if level not one.
         }
         else
         {
@@ -368,7 +370,7 @@ public class GenerateWord : MonoBehaviour
     }
     private IEnumerator NextWordProcess(int index)
     {
-        if (PlayerPrefs.GetInt("Level") > 1)
+        /*if (PlayerPrefs.GetInt("Level") > 1)
         {
             FetchContent(index);
             loadingCanvas.SetActive(true);
@@ -377,12 +379,24 @@ public class GenerateWord : MonoBehaviour
             GenerateRandomWords();
         }
         else
+        {*/
+        switch (PlayerPrefs.GetInt("Level"))
         {
-            UpdateDisplay(colors[index], frenchVersion[index], englishVersion[index]);
+            case 1:
+                UpdateDisplay(colors[index], frenchVersion[index], englishVersion[index]);
+                break;
+            case 2:
+                UpdateDisplay(animals[index], frenchVersion[index], englishVersion[index]);
+                break;
+            case 3:
+                UpdateDisplay(objects[index], frenchVersion[index], englishVersion[index]);
+                break;
+        }
+     
             yield return new WaitForSeconds(1);//alows to wait for new word to be set
             Debug.Log(PlayerPrefs.GetInt("Level") + " generate new words " + index);
             GenerateRandomWords();
-        }
+        //}
         
     }
     public void NextImage()
@@ -409,15 +423,19 @@ public class GenerateWord : MonoBehaviour
             wordCount[i].text = (currentIndex + 1).ToString();
             wordTotal[i].text = (DetectWord.maxIndex).ToString();
         }
-        if (PlayerPrefs.GetInt("Level") > 1)//if not colors level
+        switch (PlayerPrefs.GetInt("Level"))
         {
-            FetchContent(currentIndex);
+            case 1:
+                UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
+                break;
+            case 2:
+                UpdateDisplay(animals[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
+                break;
+            case 3:
+                UpdateDisplay(objects[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
+                break;
         }
-        else
-        {
-            UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
-        }
-        
+ 
 
     }
     public void PreviousImage()
@@ -435,13 +453,17 @@ public class GenerateWord : MonoBehaviour
             wordCount[i].text = (currentIndex + 1).ToString();
             wordTotal[i].text = (DetectWord.maxIndex).ToString();
         }
-        if (PlayerPrefs.GetInt("Level") > 1)//if not colors level
+        switch (PlayerPrefs.GetInt("Level"))
         {
-            FetchContent(currentIndex);
-        }
-        else
-        {
-            UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
+            case 1:
+                UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
+                break;
+            case 2:
+                UpdateDisplay(animals[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
+                break;
+            case 3:
+                UpdateDisplay(objects[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
+                break;
         }
     }
 
@@ -459,11 +481,11 @@ public class GenerateWord : MonoBehaviour
                 SpeakTeacher();
                 break;
             case 2:
-                FetchContent(currentIndex);
+                UpdateDisplay(animals[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
                 SpeakTeacher();
                 break;
             case 3:
-                FetchContent(currentIndex);
+                UpdateDisplay(objects[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
                 SpeakTeacher();
                 break;
         }

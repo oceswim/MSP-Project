@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
             Game.current.thePlayer.currentLevel = SaveSystem.currentLevel; 
             Game.current.thePlayer.levelReached = SaveSystem.reachedLevel;
             PlayerPrefs.SetInt("Level", Game.current.thePlayer.currentLevel);
+
             PlayerPrefs.SetInt("MaxLevel", Game.current.thePlayer.levelReached);
             Debug.Log("Loaded current level in manager: " + PlayerPrefs.GetInt("Level"));
             Debug.Log("Loaded max level in manager: " + PlayerPrefs.GetInt("MaxLevel"));

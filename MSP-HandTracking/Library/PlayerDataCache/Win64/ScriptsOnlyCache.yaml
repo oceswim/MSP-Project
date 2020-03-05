@@ -38,6 +38,8 @@ ScriptsOnlyBuild:
     - Valve.VR.SteamVR_Settings
     - Valve.VR.SteamVR_Skeleton_Pose
     - Valve.VR.SteamVR_Skeleton_Poser
+    SteamVR_Editor.dll:
+    - Valve.VR.SteamVR_UnitySettingsWindow
     Unity.TextMeshPro.dll:
     - TMPro.TMP_ColorGradient
     - TMPro.TMP_FontAsset
@@ -1345,7 +1347,7 @@ ScriptsOnlyBuild:
     className: HapticRack
   - hash:
       serializedVersion: 2
-      Hash: 717746ab6cf1e68e605ad2c9ba410102
+      Hash: bb2075e1c56bd196bed3249fe819aedb
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GenerateWord
@@ -2612,4 +2614,4 @@ ScriptsOnlyBuild:
   platform: 19
   scenePathNames:
   - Assets/Scenes/Environment.unity
-  playerPath: /Users/Oceswil83/Desktop/COURSFAC/MSP-Project/builds/build1/MSP.exe
+  playerPath: /Users/Oceswil83/Desktop/COURSFAC/HandTrackingBuilds/build1138/MSP.exe
