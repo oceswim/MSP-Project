@@ -60,7 +60,7 @@ public class DetectWord : MonoBehaviour
             {
                 other.GetComponent<InteractionBehaviour>().enabled = false;
             }
-            if (other.transform.tag.Equals("Word"))
+            if (other.transform.tag.Equals("Word"))//good answer
             {
                 
                 myTrigger.enabled = false;
@@ -105,28 +105,29 @@ public class DetectWord : MonoBehaviour
                             }
                             else if (counter == completionTracker)//all words are guessed
                             {
-                                congratsCanvas.SetActive(true);//you completed a category
-                                GameManager.instance.SwitchLevels(); //deactivate generate word 
+                                
                                 counter = 0;
                                 maxIndex = 2;
                                 switch (PlayerPrefs.GetInt("Level"))
                                 {
                                     case 1:
+                                        congratsCanvas.SetActive(true);//you completed a category
                                         PlayerPrefs.SetInt("Level", 2);
                                         PlayerPrefs.SetInt("MaxLevel", 2);
-                                        GameManager.instance.SwitchLevels();// activate generate wword again to display next category
-                                        GenerateWord.newCategory = true;
+                                        GameManager.instance.SwitchCategory(PlayerPrefs.GetInt("Level"));// activate generate wword again to display next category
+                                        GenerateWord.newCategory = true;//once press button to go back teacher speaks and says new category completed
                                         break;
                                     case 2:
+                                        congratsCanvas.SetActive(true);//you completed a category
                                         PlayerPrefs.SetInt("MaxLevel", 3);
                                         PlayerPrefs.SetInt("Level", 3);
-                                        GameManager.instance.SwitchLevels();// activate generate wword again to display next category
+                                        GameManager.instance.SwitchCategory(PlayerPrefs.GetInt("Level"));// activate generate wword again to display next category
                                         GenerateWord.newCategory = true;
                                         break;
                                     case 3:
                                         //finished learning basics french word what do you want to do
                                         finished.Play();
-
+                                        finishedCanvas.SetActive(true);
                                         break;
                                 }
                             
@@ -138,13 +139,13 @@ public class DetectWord : MonoBehaviour
                         {
                             Debug.Log("Here");
                             right.Play();
-                            //StartCoroutine(ShowThenHideCanvas(correctAnswerCanvas));
+                         
                             GenerateWord.nextWord = true;//display next word
-                                                         //with static bool and new method in generate a word
+                                                         
                         }
 
                     }
-                    else //wrong answer count
+                    else //wrong answer 
                     {
                         Debug.Log("Not hey");
                         wrong.Play();

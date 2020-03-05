@@ -9,9 +9,11 @@ public class GameManager : MonoBehaviour
     public GameObject LeapObject;
     private Vector3 StartPosNew = new Vector3(-3, 5.7f, -28.71f);
     private Vector3 StartPosOld = new Vector3(-3, 5.7f, -14.5f);
+
     // Start is called before the first frame update
     void Awake()
     {
+     
         // if no file saved create a brand new game
         if (!File.Exists(Application.persistentDataPath + "/ThePlayerInfo.gd"))
         {
@@ -30,8 +32,10 @@ public class GameManager : MonoBehaviour
             Game.current = new Game();
             Game.current.thePlayer.currentLevel = SaveSystem.currentLevel; 
             Game.current.thePlayer.levelReached = SaveSystem.reachedLevel;
-            PlayerPrefs.SetInt("Level", Game.current.thePlayer.currentLevel);
-            PlayerPrefs.SetInt("MaxLevel", Game.current.thePlayer.levelReached);
+            //PlayerPrefs.SetInt("Level", Game.current.thePlayer.currentLevel);
+            // PlayerPrefs.SetInt("MaxLevel", Game.current.thePlayer.levelReached);
+            PlayerPrefs.SetInt("Level", 3);
+            PlayerPrefs.SetInt("MaxLevel", 3);
             Debug.Log("Loaded current level in manager: " + PlayerPrefs.GetInt("Level"));
             Debug.Log("Loaded max level in manager: " + PlayerPrefs.GetInt("MaxLevel"));
         }
@@ -59,7 +63,7 @@ public class GameManager : MonoBehaviour
         }
         
     }
-    
+ 
     public void ExitGame()
     {
         Debug.Log("BYE");
@@ -77,20 +81,7 @@ public class GameManager : MonoBehaviour
          Application.Quit();
 #endif
     }
-    public void SwitchLevels()
-    {
-      
-        if(wordGenerator.activeInHierarchy)
-        {
-            Debug.Log("OFF");
-            wordGenerator.SetActive(false);
-        }
-        else if(!wordGenerator.activeInHierarchy)
-        {
-            Debug.Log("ON");
-            wordGenerator.SetActive(true);
-        }
-    }
+   
     public void CategorySelection()
     {
         if(PlayerPrefs.GetInt("MaxLevel")==3)//since category selection available only at level 2, then colors and animal button already active;
@@ -100,34 +91,37 @@ public class GameManager : MonoBehaviour
   
         }
     }
-    public void SwitchCategory(int category)
+    public void SwitchCategory(int category)//switch the category and the corresponding button triggers the talking
     {
-        if (PlayerPrefs.GetInt("Level") != category)//if new category selected different from 
-        {
+        
             switch (category)
             {
                 case 1:
-                    PlayerPrefs.SetInt("Level", 1);
+                    if (PlayerPrefs.GetInt("Level") != category)//if new category selected different from 
+                    {
+                        PlayerPrefs.SetInt("Level", 1);
+                    }
                     break;
                 case 2:
+                if (PlayerPrefs.GetInt("Level") != category)//if new category selected different from 
+                {
                     PlayerPrefs.SetInt("Level", 2);
+                }
+                
                     break;
                 case 3:
+                if (PlayerPrefs.GetInt("Level") != category)//if new category selected different from 
+                {
                     PlayerPrefs.SetInt("Level", 3);
+                }
+                
                     break;
             }
-            StartCoroutine(SwitchLevelCoroutine());
-        }
-        else
-        {
-            GenerateWord.speak = true;
-        }
+
+        GenerateWord.SetUp = true;
+        
+        
     }
-    private IEnumerator SwitchLevelCoroutine()
-    {
-        SwitchLevels();
-        yield return new WaitForSeconds(1);
-        SwitchLevels();
-        GenerateWord.speak = true;
-    }
+
+   
 }
