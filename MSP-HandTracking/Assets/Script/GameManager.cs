@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-     
+
         // if no file saved create a brand new game
         if (!File.Exists(Application.persistentDataPath + "/ThePlayerInfo.gd"))
         {
