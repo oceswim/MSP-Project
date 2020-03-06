@@ -12,8 +12,10 @@ public static class SaveSystem
 
     public static void SavePlayer()
     {
-        Game.current.thePlayer.currentLevel = PlayerPrefs.GetInt("Level");
-        Game.current.thePlayer.levelReached = PlayerPrefs.GetInt("MaxLevel");
+        //Game.current.thePlayer.currentLevel = PlayerPrefs.GetInt("Level");
+        Game.current.thePlayer.currentLevel = GameManager.currentLevel;
+        //Game.current.thePlayer.levelReached = PlayerPrefs.GetInt("MaxLevel");
+        Game.current.thePlayer.levelReached = GameManager.maxLevel;
 
         BinaryFormatter formatter = new BinaryFormatter();
         string path = Application.persistentDataPath + "/ThePlayerInfo.gd";

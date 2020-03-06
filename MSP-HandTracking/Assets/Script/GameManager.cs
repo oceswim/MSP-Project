@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public GameObject LeapObject;
     private Vector3 StartPosNew = new Vector3(-3, 5.7f, -28.71f);
     private Vector3 StartPosOld = new Vector3(-3, 5.7f, -14.5f);
-
+    public static int maxLevel, currentLevel;
     // Start is called before the first frame update
     void Awake()
     {
@@ -20,9 +20,11 @@ public class GameManager : MonoBehaviour
             LeapObject.transform.position = StartPosNew;
             PlayerPrefs.DeleteAll();
             Game.current = new Game();
-            PlayerPrefs.SetInt("Level", Game.current.thePlayer.currentLevel);
-            PlayerPrefs.SetInt("MaxLevel", Game.current.thePlayer.levelReached);
-            Debug.Log("new game: "+ PlayerPrefs.GetInt("Level")+ "; "+ PlayerPrefs.GetInt("MaxLevel")+"/"+Game.current.thePlayer.levelReached);
+            //PlayerPrefs.SetInt("Level", Game.current.thePlayer.currentLevel);
+            //PlayerPrefs.SetInt("MaxLevel", Game.current.thePlayer.levelReached);
+            currentLevel = Game.current.thePlayer.currentLevel;
+            maxLevel = Game.current.thePlayer.levelReached;
+            //Debug.Log("new game: "+ PlayerPrefs.GetInt("Level")+ "; "+ PlayerPrefs.GetInt("MaxLevel")+"/"+Game.current.thePlayer.levelReached);
         }
         //if file found, create a new game and load saved information
         else
@@ -33,11 +35,11 @@ public class GameManager : MonoBehaviour
             Game.current.thePlayer.currentLevel = SaveSystem.currentLevel; 
             Game.current.thePlayer.levelReached = SaveSystem.reachedLevel;
             //PlayerPrefs.SetInt("Level", Game.current.thePlayer.currentLevel);
-            // PlayerPrefs.SetInt("MaxLevel", Game.current.thePlayer.levelReached);
-            PlayerPrefs.SetInt("Level", 3);
-            PlayerPrefs.SetInt("MaxLevel", 3);
-            Debug.Log("Loaded current level in manager: " + PlayerPrefs.GetInt("Level"));
-            Debug.Log("Loaded max level in manager: " + PlayerPrefs.GetInt("MaxLevel"));
+            //PlayerPrefs.SetInt("MaxLevel", Game.current.thePlayer.levelReached);
+            currentLevel = Game.current.thePlayer.currentLevel;
+            maxLevel = Game.current.thePlayer.levelReached;
+            Debug.Log("Loaded current level in manager: " + currentLevel);
+            Debug.Log("Loaded max level in manager: " + maxLevel);
         }
         
 
@@ -54,13 +56,12 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
         //Sets this to not be destroyed when reloading scene
-        if(PlayerPrefs.HasKey("MaxLevel"))
-        {
-            if(PlayerPrefs.GetInt("MaxLevel")>1)
+        
+            if(maxLevel>1)
             {
                 categoryButton.SetActive(true);
             }
-        }
+        
         
     }
  
@@ -84,7 +85,7 @@ public class GameManager : MonoBehaviour
    
     public void CategorySelection()
     {
-        if(PlayerPrefs.GetInt("MaxLevel")==3)//since category selection available only at level 2, then colors and animal button already active;
+        if(maxLevel>2)//since category selection available only at level 2, then colors and animal button already active;
         {
           
           inTownButton.SetActive(true);
@@ -97,24 +98,16 @@ public class GameManager : MonoBehaviour
             switch (category)
             {
                 case 1:
-                    if (PlayerPrefs.GetInt("Level") != category)//if new category selected different from 
-                    {
-                        PlayerPrefs.SetInt("Level", 1);
-                    }
+
+                    currentLevel = 1;
                     break;
                 case 2:
-                if (PlayerPrefs.GetInt("Level") != category)//if new category selected different from 
-                {
-                    PlayerPrefs.SetInt("Level", 2);
-                }
-                
+               
+                    currentLevel=2;
                     break;
                 case 3:
-                if (PlayerPrefs.GetInt("Level") != category)//if new category selected different from 
-                {
-                    PlayerPrefs.SetInt("Level", 3);
-                }
                 
+                    currentLevel=3;
                     break;
             }
 

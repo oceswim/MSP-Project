@@ -79,7 +79,7 @@ public class DetectWord : MonoBehaviour
                         counter++;
                         Debug.Log(try1+": the counter:" + counter + " counter modulo " + maxIndex + ": " + (counter % maxIndex) + " completion tracker = " + completionTracker);
                         try1++;
-                        switch (PlayerPrefs.GetInt("Level"))
+                        switch (GameManager.currentLevel)
                         {
                             case 1:
                                 completionTracker = sizeLevel1;
@@ -108,20 +108,24 @@ public class DetectWord : MonoBehaviour
                                 
                                 counter = 0;
                                 maxIndex = 2;
-                                switch (PlayerPrefs.GetInt("Level"))
+                                switch (GameManager.currentLevel)
                                 {
                                     case 1:
                                         congratsCanvas.SetActive(true);//you completed a category
-                                        PlayerPrefs.SetInt("Level", 2);
-                                        PlayerPrefs.SetInt("MaxLevel", 2);
-                                        GameManager.instance.SwitchCategory(PlayerPrefs.GetInt("Level"));// activate generate wword again to display next category
+                                        GameManager.currentLevel = 2;
+                                        //PlayerPrefs.SetInt("Level", 2);
+                                        //PlayerPrefs.SetInt("MaxLevel", 2);
+                                        GameManager.maxLevel = 2;
+                                        GameManager.instance.SwitchCategory(GameManager.currentLevel);// activate generate wword again to display next category
                                         GenerateWord.newCategory = true;//once press button to go back teacher speaks and says new category completed
                                         break;
                                     case 2:
                                         congratsCanvas.SetActive(true);//you completed a category
-                                        PlayerPrefs.SetInt("MaxLevel", 3);
-                                        PlayerPrefs.SetInt("Level", 3);
-                                        GameManager.instance.SwitchCategory(PlayerPrefs.GetInt("Level"));// activate generate wword again to display next category
+                                        GameManager.maxLevel = 3;
+                                        //PlayerPrefs.SetInt("MaxLevel", 3);
+                                        //PlayerPrefs.SetInt("Level", 3);
+                                        GameManager.currentLevel = 3;
+                                        GameManager.instance.SwitchCategory(GameManager.currentLevel);// activate generate wword again to display next category
                                         GenerateWord.newCategory = true;
                                         break;
                                     case 3:
@@ -137,9 +141,8 @@ public class DetectWord : MonoBehaviour
                         }
                         else if (counter > 0 && counter <= completionTracker)//new words guessed out of 2
                         {
-                            Debug.Log("Here");
+                          
                             right.Play();
-                         
                             GenerateWord.nextWord = true;//display next word
                                                          
                         }
@@ -147,7 +150,7 @@ public class DetectWord : MonoBehaviour
                     }
                     else //wrong answer 
                     {
-                        Debug.Log("Not hey");
+
                         wrong.Play();
                         wrongAnswer.Play();
                         wrongWord = true;
@@ -166,10 +169,5 @@ public class DetectWord : MonoBehaviour
 
         
     }
-   /* private IEnumerator ShowThenHideCanvas(GameObject toHide)
-    {
-        toHide.SetActive(true);
-        yield return new WaitForSeconds(8);
-        toHide.SetActive(false);
-    }*/
+
 }

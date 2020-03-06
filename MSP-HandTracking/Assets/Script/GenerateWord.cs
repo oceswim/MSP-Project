@@ -48,9 +48,9 @@ public class GenerateWord : MonoBehaviour
             previous.interactable = practice.interactable = allButtonsActive = false;
 
             //based on level then fetch colors/ object / places
-            if (PlayerPrefs.GetInt("Level") > 1)
+            if (GameManager.currentLevel > 1)
             {
-                switch (PlayerPrefs.GetInt("Level"))
+                switch (GameManager.currentLevel)
                 {
                     case 2:
                         Debug.Log("animals");
@@ -192,12 +192,12 @@ public class GenerateWord : MonoBehaviour
             }
         }
         Debug.Log(frenchVersion.Count + " FRENCH");
-        if (PlayerPrefs.GetInt("Level")==2)
+        if (GameManager.currentLevel==2)
         {
 
             DetectWord.sizeLevel2 = frenchVersion.Count;
         }
-        else if(PlayerPrefs.GetInt("Level")==3)
+        else if(GameManager.currentLevel==3)
         {
             DetectWord.sizeLevel3 = frenchVersion.Count;
         }
@@ -233,7 +233,7 @@ public class GenerateWord : MonoBehaviour
     {
         if(newCategory)//if switching to new category then we say it to the player
         {
-            switch (PlayerPrefs.GetInt("Level"))
+            switch (GameManager.currentLevel)
             {
                 case 2:
                     newCategories[0].Play();
@@ -246,7 +246,7 @@ public class GenerateWord : MonoBehaviour
             }
             newCategory = false;
         }
-        switch (PlayerPrefs.GetInt("Level"))
+        switch (GameManager.currentLevel)
         {
             case 1:
                 teacher[0].Play();
@@ -327,7 +327,7 @@ public class GenerateWord : MonoBehaviour
     private IEnumerator NextWordProcess(int index)
     {
       
-        switch (PlayerPrefs.GetInt("Level"))
+        switch (GameManager.currentLevel)
         {
             case 1:
                 UpdateDisplay(colors[index], frenchVersion[index], englishVersion[index]);
@@ -341,7 +341,7 @@ public class GenerateWord : MonoBehaviour
         }
      
             yield return new WaitForSeconds(1);//alows to wait for new word to be set
-            Debug.Log(PlayerPrefs.GetInt("Level") + " generate new words " + index);
+            Debug.Log(GameManager.currentLevel + " generate new words " + index);
             GenerateRandomWords();
         
     }
@@ -369,7 +369,7 @@ public class GenerateWord : MonoBehaviour
             wordCount[i].text = (currentIndex + 1).ToString();
             wordTotal[i].text = (DetectWord.maxIndex).ToString();
         }
-        switch (PlayerPrefs.GetInt("Level"))
+        switch (GameManager.currentLevel)
         {
             case 1:
                 UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
@@ -399,7 +399,7 @@ public class GenerateWord : MonoBehaviour
             wordCount[i].text = (currentIndex + 1).ToString();
             wordTotal[i].text = (DetectWord.maxIndex).ToString();
         }
-        switch (PlayerPrefs.GetInt("Level"))
+        switch (GameManager.currentLevel)
         {
             case 1:
                 UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
@@ -420,7 +420,7 @@ public class GenerateWord : MonoBehaviour
         previous.interactable = false;
         practice.interactable = false;
         ResetWordCounterDisplay();
-        switch(PlayerPrefs.GetInt("Level"))
+        switch(GameManager.currentLevel)
         {
             case 1:
                 UpdateDisplay(colors[currentIndex], frenchVersion[currentIndex], englishVersion[currentIndex]);
